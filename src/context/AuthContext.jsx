@@ -28,12 +28,14 @@ function AuthProvider({ children }) {
         return {}
     })
 
+    const [isLoading, setIsLoading] = useState(false)
+
 
     const signIn = useCallback(async ({ email, password }) => {
         const response = await api.post('/session', {
             email,
             password
-        })
+        }).finally(() => setIsLoading(false))
 
         const { token, newUser, roles } = response.data
 
@@ -58,7 +60,7 @@ function AuthProvider({ children }) {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ token, signIn, userLogged, user, roles }}>
+        <AuthContext.Provider value={{ token, signIn, userLogged, user, roles, isLoading, setIsLoading }}>
             {children}
         </AuthContext.Provider>
     )
